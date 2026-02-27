@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Педагог по профориентации | С ИИ к успеху</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: #fff;
+            overflow-x: hidden;
+            background-color: #0b0c10; /* fallback */
+        }
+
+        /* Canvas на заднем плане */
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none; /* чтобы контент был кликабельным */
+        }
+
+        /* Основной контент поверх canvas */
+        .content {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            background: rgba(0, 0, 0, 0.25); /* легкая полупрозрачность для читаемости */
+            backdrop-filter: blur(4px);
+            border-radius: 40px 40px 0 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Типография */
+        h1, h2, h3 {
+            font-weight: 800;
+            letter-spacing: 0.02em;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            line-height: 1.1;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #FFBE0B, #FF006E, #3A86FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #FFBE0B, #FF006E);
+            border-radius: 4px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-weight: 400;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Шапка */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 4rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(145deg, #B79CE7, #7DF9FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .social a {
+            color: white;
+            font-size: 1.8rem;
+            margin-left: 1.2rem;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        .social a:hover {
+            transform: translateY(-5px);
+            color: #FFBE0B;
+        }
+
+        /* Герой */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 5rem;
+        }
+
+        .hero .subhead {
+            font-size: 1.3rem;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(8px);
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #FF006E, #3A86FF);
+            border: none;
+            color: white;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(255,0,110,0.4);
+            text-decoration: none;
+            display: inline-block;
+            border: 2px solid transparent;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(58,134,255,0.6);
+            border-color: white;
+        }
+
+        /* Карточки направлений */
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            margin-bottom: 5rem;
+        }
+
+        .service-card {
+            background: rgba(20, 20, 40, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 2rem 1.5rem;
+            border: 1px solid rgba(255,255,255,0.25);
+            transition: 0.4s;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+        .service-card:hover {
+            transform: translateY(-15px);
+            border-color: #FFBE0B;
+            background: rgba(60, 40, 80, 0.7);
+        }
+
+        .service-card i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #FFBE0B, #FF006E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .service-card h3 {
+            margin-bottom: 0.8rem;
+        }
+
+        .service-card p {
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        /* О себе */
+        .about {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 5rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 50px;
+            padding: 2.5rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .about-text {
+            flex: 2;
+        }
+
+        .about-stats {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .stat {
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            padding: 1.5rem 1rem;
+            border: 1px solid rgba(255, 190, 11, 0.5);
+        }
+        .stat .number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #FFBE0B;
+        }
+
+        /* Контакты */
+        .contacts {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .contact-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-item {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(8px);
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.3);
+            font-size: 1.2rem;
+        }
+        .contact-item i {
+            margin-right: 10px;
+            color: #FFBE0B;
+        }
+
+        /* Подвал */
+        .footer {
+            text-align: center;
+            margin-top: auto;
+            padding-top: 3rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 700px) {
+            .header {
+                flex-direction: column;
+                align-items: start;
+            }
+            .social a {
+                margin-left: 0;
+                margin-right: 1.2rem;
+            }
+            .about {
+                flex-direction: column;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Холст для анимации -->
+    <canvas id="canvas-bg"></canvas>
+
+    <div class="content">
+        <!-- Шапка -->
+        <header class="header">
+            <div class="logo">PROFI<span style="color: #FF006E;">🔹</span>GUIDE</div>
+            <div class="social">
+                <a href="#"><i class="fab fa-telegram"></i></a>
+                <a href="#"><i class="fab fa-vk"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+        </header>
+
+        <!-- Герой -->
+        <section class="hero">
+            <span class="subhead"><i class="fas fa-robot" style="margin-right: 8px;"></i> Профориентация с искусственным интеллектом</span>
+            <h1>Анна Смирнова</h1>
+            <p style="max-width: 600px;">Помогаю старшеклассникам найти своё призвание с помощью современных ИИ-технологий. Индивидуально, увлекательно, результативно.</p>
+            <a href="#" class="btn"><i class="fas fa-calendar-check" style="margin-right: 10px;"></i>Записаться на пробную сессию</a>
+        </section>
+
+        <!-- Направления -->
+        <h2>Что я предлагаю</h2>
+        <div class="services">
+            <div class="service-card">
+                <i class="fas fa-brain"></i>
+                <h3>ИИ-тестирование</h3>
+                <p>Современные алгоритмы анализируют интересы, способности и личностные черты.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Трекеры профессий</h3>
+                <p>Актуальные данные рынка труда и прогнозы востребованности до 2035 года.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-lightbulb"></i>
+                <h3>Индивидуальные планы</h3>
+                <p>Пошаговые маршруты развития с учётом выбранных направлений.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-users"></i>
+                <h3>Групповые тренинги</h3>
+                <p>Мастер-классы по soft skills и цифровым профессиям в игровом формате.</p>
+            </div>
+        </div>
+
+        <!-- О педагоге -->
+        <h2>Обо мне</h2>
+        <div class="about">
+            <div class="about-text">
+                <p>Более 10 лет я работаю со старшеклассниками и студентами. Психолог по образованию, сертифицированный профориентолог. В 2023 году интегрировала в свои программы нейросетевые инструменты — это повысило точность рекомендаций на 40%.</p>
+                <p>Верю, что выбор профессии может быть осознанным и радостным. Помогаю раскрыть сильные стороны и найти дело жизни в мире высоких технологий.</p>
+            </div>
+            <div class="about-stats">
+                <div class="stat">
+                    <div class="number">500+</div>
+                    <div>счастливых учеников</div>
+                </div>
+                <div class="stat">
+                    <div class="number">92%</div>
+                    <div>поступают на бюджет</div>
+                </div>
+                <div class="stat">
+                    <div class="number">15</div>
+                    <div>лет опыта</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Контакты -->
+        <h2>Свяжитесь со мной</h2>
+        <div class="contacts">
+            <div class="contact-links">
+                <div class="contact-item"><i class="fas fa-envelope"></i> anna@profi-guide.ru</div>
+                <div class="contact-item"><i class="fas fa-phone-alt"></i> +7 (999) 123-45-67</div>
+                <div class="contact-item"><i class="fab fa-telegram"></i> @anna_prof_ai</div>
+            </div>
+            <p style="margin-top: 2rem;">Или напишите в соцсетях — отвечаю быстро!</p>
+        </div>
+
+        <!-- Подвал -->
+        <footer class="footer">
+            © 2025 Педагог по профориентации Анна Смирнова | С любовью к будущему ❤️
+        </footer>
+    </div>
+
+    <script>
+        (function() {
+            const canvas = document.getElementById('canvas-bg');
+            const ctx = canvas.getContext('2d');
+
+            // Устанавливаем размер под окно
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            // Палитра Pantone 2025-2026 (яркие оттенки)
+            const colors = [
+                '#B79CE7', // Digital Lavender
+                '#7DF9FF', // Electric Blue
+                '#FF4D4D', // Radiant Red
+                '#FFD300', // Vibrant Yellow
+                '#FF006E', // Hot Pink
+                '#3A86FF', // Vivid Blue
+                '#FFBE0B'  // Amber
+            ];
+
+            // Частицы
+            let particles = [];
+            const PARTICLE_COUNT = 80;
+
+            function initParticles() {
+                for (let i = 0; i < PARTICLE_COUNT; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        radius: Math.random() * 6 + 3,      // от 3 до 9
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        speedX: (Math.random() - 0.5) * 0.6,
+                        speedY: (Math.random() - 0.5) * 0.6,
+                        opacity: Math.random() * 0.5 + 0.3, // 0.3-0.8
+                    });
+                }
+            }
+
+            // Обновление частиц
+            function updateParticles() {
+                for (let p of particles) {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+
+                    // Циклическое возвращение (телепортация через край)
+                    if (p.x < 0) p.x = canvas.width;
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = canvas.height;
+                    if (p.y > canvas.height) p.y = 0;
+                }
+            }
+
+            // Отрисовка
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Радиальный градиент фона (чтобы не было пустоты)
+                const gradient = ctx.createRadialGradient(
+                    canvas.width/2, canvas.height/2, 100,
+                    canvas.width/2, canvas.height/2, canvas.width/1.5
+                );
+                gradient.addColorStop(0, '#1A1423');
+                gradient.addColorStop(0.5, '#2B1E3A');
+                gradient.addColorStop(1, '#0F0A1E');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Рисуем частицы со свечением
+                for (let p of particles) {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    
+                    // Основной цвет с прозрачностью
+                    ctx.fillStyle = p.color + Math.floor(p.opacity * 255).toString(16).padStart(2, '0');
+                    ctx.fill();
+                    
+                    // Добавим блик
+                    ctx.shadowColor = p.color;
+                    ctx.shadowBlur = 20;
+                    ctx.fill(); // повтор для усиления свечения
+                    ctx.shadowBlur = 0; // сброс для остальных частиц
+                }
+
+                // Соединяем близкие частицы линиями (эффект нейросети)
+                ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(255,255,255,${0.08 * (1 - dist/120)})`;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            // Анимационный цикл
+            function animate() {
+                updateParticles();
+                draw();
+                requestAnimationFrame(animate);
+            }
+
+            // Инициализация и старт
+            initParticles();
+            animate();
+
+            // При изменении размера пересоздаём частицы с учётом новых размеров
+            window.addEventListener('resize', function() {
+                particles = [];
+                initParticles();
+            });
+
+        })();
+    </script>
+</body>
+</html>
