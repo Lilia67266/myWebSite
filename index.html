@@ -1,519 +1,728 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Педагог по профориентации | С ИИ к успеху</title>
-    <!-- Google Fonts & Font Awesome -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Бахтинова Лилия Рефисовна — Профориентация с ИИ</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #2a955a;
+    --green-light: #e8f7ef;
+    --green-mid: #b8e8cf;
+    --mint: #a8d8bc;
+    --sage: #6db98a;
+    --sky: #c3e8f5;
+    --sky-deep: #7ec8e3;
+    --peach: #f5dfc3;
+    --peach-deep: #e8b87e;
+    --lavender: #d8d4f0;
+    --lavender-deep: #9b94d4;
+    --butter: #f0f0c3;
+    --butter-deep: #c8c87e;
+    --blush: #f5c3d4;
+    --blush-deep: #e07a9b;
+    --text: #1a3a2a;
+    --text-light: #4a6a5a;
+    --white: #fafffe;
+    --card-bg: #f5fefc;
+  }
 
-        body {
-            font-family: 'Montserrat', sans-serif;
-            color: #fff;
-            overflow-x: hidden;
-            background-color: #0b0c10; /* fallback */
-        }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* Canvas на заднем плане */
-        #canvas-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none; /* чтобы контент был кликабельным */
-        }
+  html { scroll-behavior: smooth; }
 
-        /* Основной контент поверх canvas */
-        .content {
-            position: relative;
-            z-index: 10;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-            background: rgba(0, 0, 0, 0.25); /* легкая полупрозрачность для читаемости */
-            backdrop-filter: blur(4px);
-            border-radius: 40px 40px 0 0;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    overflow-x: hidden;
+  }
 
-        /* Типография */
-        h1, h2, h3 {
-            font-weight: 800;
-            letter-spacing: 0.02em;
-        }
+  /* CURSOR BALLS */
+  .ball {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s;
+  }
 
-        h1 {
-            font-size: clamp(2.5rem, 8vw, 4.5rem);
-            line-height: 1.1;
-            text-transform: uppercase;
-            background: linear-gradient(135deg, #FFBE0B, #FF006E, #3A86FF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
+  /* NAVBAR */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: var(--white);
+    border-bottom: 2px solid var(--green-mid);
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    height: 64px;
+    gap: 24px;
+    box-shadow: 0 2px 16px rgba(42,149,90,0.08);
+  }
 
-        h2 {
-            font-size: 2.2rem;
-            margin-bottom: 2rem;
-            position: relative;
-            display: inline-block;
-        }
-        h2:after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, #FFBE0B, #FF006E);
-            border-radius: 4px;
-        }
+  .nav-title {
+    font-family: 'Unbounded', cursive;
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--green);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1.2;
+  }
 
-        h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
+  .nav-divider {
+    width: 2px;
+    height: 32px;
+    background: var(--green-mid);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
 
-        p {
-            font-weight: 400;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
+  .nav-links {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    list-style: none;
+  }
 
-        /* Шапка */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 4rem;
-        }
+  .nav-links a {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 6px 16px;
+    border-radius: 50px;
+    transition: opacity 0.2s, transform 0.2s;
+    white-space: nowrap;
+  }
 
-        .logo {
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(145deg, #B79CE7, #7DF9FF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+  .nav-links a:hover { opacity: 0.8; transform: translateY(-1px); }
 
-        .social a {
-            color: white;
-            font-size: 1.8rem;
-            margin-left: 1.2rem;
-            transition: all 0.3s;
-            display: inline-block;
-        }
-        .social a:hover {
-            transform: translateY(-5px);
-            color: #FFBE0B;
-        }
+  .nav-links .n1 { background: var(--sky); color: #2a6a8a; }
+  .nav-links .n2 { background: var(--butter); color: #6a6a2a; }
+  .nav-links .n3 { background: var(--peach); color: #8a4a2a; }
+  .nav-links .n4 { background: var(--mint); color: #1a5a3a; }
+  .nav-links .n5 { background: var(--lavender); color: #4a3a8a; }
+  .nav-links .n6 { background: var(--blush); color: #8a2a4a; }
 
-        /* Герой */
-        .hero {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            margin-bottom: 5rem;
-        }
+  /* MAIN CONTENT */
+  .main {
+    margin-top: 64px;
+    padding: 48px 32px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-        .hero .subhead {
-            font-size: 1.3rem;
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(8px);
-            padding: 0.5rem 1.5rem;
-            border-radius: 40px;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
+  /* HERO */
+  .hero {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+    margin-bottom: 56px;
+    background: var(--green-light);
+    border-radius: 32px;
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+  }
 
-        .btn {
-            background: linear-gradient(45deg, #FF006E, #3A86FF);
-            border: none;
-            color: white;
-            padding: 1rem 2.5rem;
-            font-size: 1.2rem;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 10px 20px rgba(255,0,110,0.4);
-            text-decoration: none;
-            display: inline-block;
-            border: 2px solid transparent;
-        }
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(58,134,255,0.6);
-            border-color: white;
-        }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: var(--green-mid);
+    border-radius: 50%;
+    opacity: 0.4;
+  }
 
-        /* Карточки направлений */
-        .services {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 2rem;
-            margin-bottom: 5rem;
-        }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: 30%;
+    width: 120px; height: 120px;
+    background: var(--mint);
+    border-radius: 50%;
+    opacity: 0.5;
+  }
 
-        .service-card {
-            background: rgba(20, 20, 40, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            padding: 2rem 1.5rem;
-            border: 1px solid rgba(255,255,255,0.25);
-            transition: 0.4s;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-        }
-        .service-card:hover {
-            transform: translateY(-15px);
-            border-color: #FFBE0B;
-            background: rgba(60, 40, 80, 0.7);
-        }
+  .hero-photo {
+    width: 200px;
+    height: 200px;
+    min-width: 200px;
+    border-radius: 24px;
+    background: var(--green-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 3px solid var(--sage);
+    z-index: 1;
+  }
 
-        .service-card i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #FFBE0B, #FF006E);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+  .hero-photo svg {
+    width: 80px;
+    height: 80px;
+    opacity: 0.5;
+  }
 
-        .service-card h3 {
-            margin-bottom: 0.8rem;
-        }
+  .hero-info {
+    z-index: 1;
+    flex: 1;
+  }
 
-        .service-card p {
-            font-size: 0.95rem;
-            margin-bottom: 0;
-        }
+  .hero-name {
+    font-family: 'Unbounded', cursive;
+    font-size: clamp(22px, 3.5vw, 42px);
+    font-weight: 900;
+    color: var(--green);
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
 
-        /* О себе */
-        .about {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 3rem;
-            align-items: center;
-            margin-bottom: 5rem;
-            background: rgba(0,0,0,0.3);
-            border-radius: 50px;
-            padding: 2.5rem;
-            backdrop-filter: blur(5px);
-        }
+  .hero-role {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--sage);
+    margin-bottom: 8px;
+  }
 
-        .about-text {
-            flex: 2;
-        }
+  .hero-tagline {
+    font-size: 15px;
+    color: var(--text-light);
+    line-height: 1.6;
+  }
 
-        .about-stats {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
+  /* SECTIONS */
+  .section {
+    margin-bottom: 40px;
+    border-radius: 28px;
+    padding: 40px;
+  }
 
-        .stat {
-            text-align: center;
-            background: rgba(255,255,255,0.1);
-            border-radius: 30px;
-            padding: 1.5rem 1rem;
-            border: 1px solid rgba(255, 190, 11, 0.5);
-        }
-        .stat .number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #FFBE0B;
-        }
+  .section-title {
+    font-family: 'Unbounded', cursive;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
 
-        /* Контакты */
-        .contacts {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            margin-bottom: 3rem;
-        }
+  .section-text {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-light);
+  }
 
-        .contact-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
+  /* ABOUT */
+  #about { background: var(--sky); }
+  #about .section-title { color: #2a6a8a; }
 
-        .contact-item {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(8px);
-            padding: 0.8rem 2rem;
-            border-radius: 40px;
-            border: 1px solid rgba(255,255,255,0.3);
-            font-size: 1.2rem;
-        }
-        .contact-item i {
-            margin-right: 10px;
-            color: #FFBE0B;
-        }
+  /* DIRECTIONS */
+  #directions { background: var(--butter); }
+  #directions .section-title { color: #6a6a2a; }
 
-        /* Подвал */
-        .footer {
-            text-align: center;
-            margin-top: auto;
-            padding-top: 3rem;
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
+  .directions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
 
-        /* Адаптивность */
-        @media (max-width: 700px) {
-            .header {
-                flex-direction: column;
-                align-items: start;
-            }
-            .social a {
-                margin-left: 0;
-                margin-right: 1.2rem;
-            }
-            .about {
-                flex-direction: column;
-                padding: 1.5rem;
-            }
-        }
-    </style>
+  .dir-card {
+    background: rgba(255,255,255,0.7);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #5a5a2a;
+  }
+
+  .dir-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: var(--butter-deep);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  /* EDUCATION */
+  #education { background: var(--green-light); }
+  #education .section-title { color: var(--green); }
+
+  /* ACHIEVEMENTS */
+  #achievements { background: var(--peach); }
+  #achievements .section-title { color: #8a4a2a; }
+
+  /* PROJECTS */
+  #projects { background: var(--lavender); }
+  #projects .section-title { color: #4a3a8a; }
+
+  /* CONTACTS */
+  #contacts { background: var(--blush); }
+  #contacts .section-title { color: #8a2a4a; }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+    margin-top: 8px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px; top: 0; bottom: 0;
+    width: 3px;
+    background: rgba(42,149,90,0.25);
+    border-radius: 3px;
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 28px;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -26px;
+    top: 6px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--green);
+    border: 3px solid white;
+  }
+
+  .timeline-year {
+    font-family: 'Unbounded', cursive;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--sage);
+    margin-bottom: 4px;
+  }
+
+  .timeline-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 2px;
+  }
+
+  .timeline-sub {
+    font-size: 13px;
+    color: var(--text-light);
+    line-height: 1.5;
+  }
+
+  /* CTA BUTTON */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--green);
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    padding: 16px 36px;
+    border-radius: 50px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(42,149,90,0.25);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(42,149,90,0.35);
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--green);
+    color: var(--green);
+    box-shadow: none;
+  }
+
+  /* PROJECT CARD */
+  .project-card {
+    background: rgba(255,255,255,0.6);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .project-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #4a3a8a;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  /* CONTACT CARD */
+  .contact-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 20px;
+    padding: 18px 28px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 700;
+    color: #8a2a4a;
+    transition: transform 0.2s;
+  }
+
+  .contact-card:hover { transform: translateY(-2px); }
+
+  .max-icon {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    background: #1a1a2e;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-family: 'Unbounded', cursive;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+
+  /* GEOMETRIC DECO */
+  .geo {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--text-light);
+    font-size: 13px;
+    border-top: 2px solid var(--green-mid);
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav {
+      padding: 0 16px;
+      height: auto;
+      min-height: 56px;
+      flex-wrap: wrap;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .nav-title { font-size: 10px; }
+    .nav-divider { display: none; }
+    .nav-links { gap: 4px; }
+    .nav-links a { font-size: 11px; padding: 5px 10px; }
+
+    .main { margin-top: 80px; padding: 24px 16px; }
+
+    .hero {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 32px 24px;
+      gap: 24px;
+    }
+
+    .hero-name { font-size: 24px; }
+    .hero-photo { width: 150px; height: 150px; min-width: 150px; }
+
+    .section { padding: 28px 24px; }
+    .section-title { font-size: 18px; }
+
+    .directions-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 480px) {
+    .nav-links { display: none; }
+    .directions-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Hamburger for mobile */
+  .hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 12px;
+    background: var(--green-light);
+    margin-left: auto;
+  }
+
+  @media (max-width: 480px) {
+    .hamburger { display: flex; flex-direction: column; gap: 4px; }
+    .hamburger span { width: 22px; height: 2px; background: var(--green); border-radius: 2px; display: block; }
+    .nav-links {
+      display: none;
+      position: fixed;
+      top: 56px; left: 0; right: 0;
+      background: var(--white);
+      flex-direction: column;
+      padding: 16px;
+      gap: 8px;
+      border-bottom: 2px solid var(--green-mid);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      z-index: 999;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a { width: 100%; text-align: center; }
+  }
+</style>
 </head>
 <body>
 
-    <!-- Холст для анимации -->
-    <canvas id="canvas-bg"></canvas>
+<!-- CURSOR BALLS -->
+<canvas id="ballCanvas" style="position:fixed;top:0;left:0;pointer-events:none;z-index:9998;width:100%;height:100%;"></canvas>
 
-    <div class="content">
-        <!-- Шапка -->
-        <header class="header">
-            <div class="logo">PROFI<span style="color: #FF006E;">🔹</span>GUIDE</div>
-            <div class="social">
-                <a href="#"><i class="fab fa-telegram"></i></a>
-                <a href="#"><i class="fab fa-vk"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-youtube"></i></a>
-            </div>
-        </header>
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-title">ПРОФОРИЕНТАЦИЯ С<br>ИСКУССТВЕННЫМ ИНТЕЛЛЕКТОМ</div>
+  <div class="nav-divider"></div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about" class="n1">Обо мне</a></li>
+    <li><a href="#education" class="n2">Образование</a></li>
+    <li><a href="#experience" class="n3">Опыт работы</a></li>
+	<li><a href="#achievements" class="n6">Достижения</a></li>
+    <li><a href="#projects" class="n4">Проекты</a></li>
+    <li><a href="#contacts" class="n5">Контакты</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
-        <!-- Герой -->
-        <section class="hero">
-            <span class="subhead"><i class="fas fa-robot" style="margin-right: 8px;"></i> Профориентация с искусственным интеллектом</span>
-            <h1>Анна Смирнова</h1>
-            <p style="max-width: 600px;">Помогаю старшеклассникам найти своё призвание с помощью современных ИИ-технологий. Индивидуально, увлекательно, результативно.</p>
-            <a href="#" class="btn"><i class="fas fa-calendar-check" style="margin-right: 10px;"></i>Записаться на пробную сессию</a>
-        </section>
+<!-- MAIN -->
+<div class="main">
 
-        <!-- Направления -->
-        <h2>Что я предлагаю</h2>
-        <div class="services">
-            <div class="service-card">
-                <i class="fas fa-brain"></i>
-                <h3>ИИ-тестирование</h3>
-                <p>Современные алгоритмы анализируют интересы, способности и личностные черты.</p>
-            </div>
-            <div class="service-card">
-                <i class="fas fa-chart-line"></i>
-                <h3>Трекеры профессий</h3>
-                <p>Актуальные данные рынка труда и прогнозы востребованности до 2035 года.</p>
-            </div>
-            <div class="service-card">
-                <i class="fas fa-lightbulb"></i>
-                <h3>Индивидуальные планы</h3>
-                <p>Пошаговые маршруты развития с учётом выбранных направлений.</p>
-            </div>
-            <div class="service-card">
-                <i class="fas fa-users"></i>
-                <h3>Групповые тренинги</h3>
-                <p>Мастер-классы по soft skills и цифровым профессиям в игровом формате.</p>
-            </div>
-        </div>
-
-        <!-- О педагоге -->
-        <h2>Обо мне</h2>
-        <div class="about">
-            <div class="about-text">
-                <p>Более 10 лет я работаю со старшеклассниками и студентами. Психолог по образованию, сертифицированный профориентолог. В 2023 году интегрировала в свои программы нейросетевые инструменты — это повысило точность рекомендаций на 40%.</p>
-                <p>Верю, что выбор профессии может быть осознанным и радостным. Помогаю раскрыть сильные стороны и найти дело жизни в мире высоких технологий.</p>
-            </div>
-            <div class="about-stats">
-                <div class="stat">
-                    <div class="number">500+</div>
-                    <div>счастливых учеников</div>
-                </div>
-                <div class="stat">
-                    <div class="number">92%</div>
-                    <div>поступают на бюджет</div>
-                </div>
-                <div class="stat">
-                    <div class="number">15</div>
-                    <div>лет опыта</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Контакты -->
-        <h2>Свяжитесь со мной</h2>
-        <div class="contacts">
-            <div class="contact-links">
-                <div class="contact-item"><i class="fas fa-envelope"></i> anna@profi-guide.ru</div>
-                <div class="contact-item"><i class="fas fa-phone-alt"></i> +7 (999) 123-45-67</div>
-                <div class="contact-item"><i class="fab fa-telegram"></i> @anna_prof_ai</div>
-            </div>
-            <p style="margin-top: 2rem;">Или напишите в соцсетях — отвечаю быстро!</p>
-        </div>
-
-        <!-- Подвал -->
-        <footer class="footer">
-            © 2025 Педагог по профориентации Анна Смирнова | С любовью к будущему ❤️
-        </footer>
+  <!-- HERO -->
+  <section class="hero">
+   <div class="hero-photo">
+  <img src="фото.jpg" style="width:100%;height:100%;object-fit:cover;">
+</div>
+    <div class="hero-info">
+      <div class="hero-name">Бахтинова<br>Лилия<br>Рефисовна</div>
+      <div class="hero-role">Педагог по профориентации с ИИ</div>
+     
     </div>
+  </section>
 
-    <script>
-        (function() {
-            const canvas = document.getElementById('canvas-bg');
-            const ctx = canvas.getContext('2d');
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="section-title">Обо мне</div>
+    <div class="section-text">
+      Помогаю ребятам от 10 до 16 лет найти своё призвание с помощью современных ИИ-технологий. Умею объяснять сложные вещи понятно для любого возраста. Научу пользоваться ИИ инструментами. Доведу до нужного результата.
+    </div>
+  </section>
 
-            // Устанавливаем размер под окно
-            function resizeCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
+  <!-
 
-            // Палитра Pantone 2025-2026 (яркие оттенки)
-            const colors = [
-                '#B79CE7', // Digital Lavender
-                '#7DF9FF', // Electric Blue
-                '#FF4D4D', // Radiant Red
-                '#FFD300', // Vibrant Yellow
-                '#FF006E', // Hot Pink
-                '#3A86FF', // Vivid Blue
-                '#FFBE0B'  // Amber
-            ];
+  <!-- EDUCATION -->
+  <section class="section" id="education" style="background: var(--butter);">
+  <div class="section-title" style="color: #6a6a2a;">Образование</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">Наст. время</div>
+        <div class="timeline-title">Казанский федеральный университет, г. Казань</div>
+        <div class="timeline-sub">Аспирантура · Общая педагогика, история педагогики и образования</div>
+      </div>
+      <div class="timeline-item">
+		<div class="timeline-year">2024</div>
+        <div class="timeline-title">Казанский федеральный университет, г. Казань</div>
+        <div class="timeline-sub">Магистратура · Педагогическое образование</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2018</div>
+        <div class="timeline-title">Чувашский государственный университет, г. Чебоксары</div>
+        <div class="timeline-sub">Бакалавр · Переводчик английского языка</div>
+      </div>
+      <div class="timeline-item" style="margin-bottom: 0;">
+       	<div class="timeline-year">2007</div>
+        <div class="timeline-title">Канашский педагогический колледж, г. Канаш</div>
+        <div class="timeline-sub">Среднее профессиональное · Учитель начальных классов и английского языка</div>
+      </div>
+    </div>
+  </section>
 
-            // Частицы
-            let particles = [];
-            const PARTICLE_COUNT = 80;
+  <!-- EXPERIENCE -->
+  <section class="section" id="experience" style="background: var(--peach);">
+  <div class="section-title" style="color: #8a4a2a;">Опыт работы</div>
+    <div class="timeline">
+      <div class="timeline-item">
+	    <div class="timeline-year">2025 — наст. время</div>
+        <div class="timeline-title">МАОУ СОШ №9, г. Канаш</div>
+        <div class="timeline-sub">Учитель английского языка</div>
+      </div>
+      <div class="timeline-item" style="margin-bottom: 0;">
+        <div class="timeline-year">2018 — 2025</div>
+        <div class="timeline-title">МАУ ДО «Межшкольный учебный комбинат «Эврика», г. Новый Уренгой </div>
+        <div class="timeline-sub">Педагог дополнительного образования</div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- ACHIEVEMENTS -->
+<section class="section" id="achievements" style="background: var(--mint);">
+  <div class="section-title" style="color: #1a5a3a;">Достижения</div>
+  <div class="timeline">
+    <div class="timeline-item">
+	  <div class="timeline-year">2024</div>
+      <div class="timeline-title">Педагог высшей квалификационной категории</div>
+      <div class="timeline-sub"></div>
+    </div>
+    <div class="timeline-item">
+	  <div class="timeline-year">2023</div>
+      <div class="timeline-title">Победитель окружного конкурса инновационных проектов в сфере образования</div>
+      <div class="timeline-sub">ЯНАО</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2021</div>
+      <div class="timeline-title">Победитель окружного конкурса инновационных проектов в сфере образования</div>
+      <div class="timeline-sub">ЯНАО</div>
+    </div>
+    <div class="timeline-item" style="margin-bottom: 0;">
+      <div class="timeline-year">2020</div>
+      <div class="timeline-title">Лауреат городского педагогического конкурса «Педагог года»</div>
+      <div class="timeline-sub">г. Новый Уренгой</div>
+    </div>
+  </div>
+</section>
 
-            function initParticles() {
-                for (let i = 0; i < PARTICLE_COUNT; i++) {
-                    particles.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height,
-                        radius: Math.random() * 6 + 3,      // от 3 до 9
-                        color: colors[Math.floor(Math.random() * colors.length)],
-                        speedX: (Math.random() - 0.5) * 0.6,
-                        speedY: (Math.random() - 0.5) * 0.6,
-                        opacity: Math.random() * 0.5 + 0.3, // 0.3-0.8
-                    });
-                }
-            }
+  <!-- PROJECTS -->
+  <section class="section" id="projects">
+    <div class="section-title">Проекты</div>
+    <div class="project-card">
+      <div class="project-title">Реализация дополнительной общеобразовательной программы</div>
+      <a href="#" class="btn" style="background: #4a3a8a; box-shadow: 0 4px 16px rgba(74,58,138,0.25);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Открыть документ
+      </a>
+    </div>
+	<div class="project-card">
+      <div class="project-title">Анкета для родителей</div>
+      <a href="#" class="btn" style="background: #4a3a8a; box-shadow: 0 4px 16px rgba(74,58,138,0.25);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Открыть документ
+      </a>
+    </div>
+	<div class="project-card">
+      <div class="project-title">Анкета для обучающихся</div>
+      <a href="#" class="btn" style="background: #4a3a8a; box-shadow: 0 4px 16px rgba(74,58,138,0.25);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Открыть документ
+      </a>
+    </div>
+  </section>
 
-            // Обновление частиц
-            function updateParticles() {
-                for (let p of particles) {
-                    p.x += p.speedX;
-                    p.y += p.speedY;
+  <!-- CONTACTS -->
+  <section class="section" id="contacts">
+    <div class="section-title">Контакты</div>
+    <a href="https://web.telegram.org/@LiliyaRefisovna" target="_blank" class="contact-card">
+      <div class="tg-icon">TG</div>
+      Написать в telegram
+    </a>
+  </section>
 
-                    // Циклическое возвращение (телепортация через край)
-                    if (p.x < 0) p.x = canvas.width;
-                    if (p.x > canvas.width) p.x = 0;
-                    if (p.y < 0) p.y = canvas.height;
-                    if (p.y > canvas.height) p.y = 0;
-                }
-            }
+</div>
 
-            // Отрисовка
-            function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+<footer>
+  © 2025 Бахтинова Лилия Рефисовна · Профориентация с Искусственным Интеллектом
+</footer>
 
-                // Радиальный градиент фона (чтобы не было пустоты)
-                const gradient = ctx.createRadialGradient(
-                    canvas.width/2, canvas.height/2, 100,
-                    canvas.width/2, canvas.height/2, canvas.width/1.5
-                );
-                gradient.addColorStop(0, '#1A1423');
-                gradient.addColorStop(0.5, '#2B1E3A');
-                gradient.addColorStop(1, '#0F0A1E');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+<script>
+// CURSOR BALLS
+const canvas = document.getElementById('ballCanvas');
+const ctx = canvas.getContext('2d');
 
-                // Рисуем частицы со свечением
-                for (let p of particles) {
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    
-                    // Основной цвет с прозрачностью
-                    ctx.fillStyle = p.color + Math.floor(p.opacity * 255).toString(16).padStart(2, '0');
-                    ctx.fill();
-                    
-                    // Добавим блик
-                    ctx.shadowColor = p.color;
-                    ctx.shadowBlur = 20;
-                    ctx.fill(); // повтор для усиления свечения
-                    ctx.shadowBlur = 0; // сброс для остальных частиц
-                }
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
 
-                // Соединяем близкие частицы линиями (эффект нейросети)
-                ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-                ctx.lineWidth = 1;
-                for (let i = 0; i < particles.length; i++) {
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const dx = particles[i].x - particles[j].x;
-                        const dy = particles[i].y - particles[j].y;
-                        const dist = Math.sqrt(dx*dx + dy*dy);
-                        if (dist < 120) {
-                            ctx.beginPath();
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = `rgba(255,255,255,${0.08 * (1 - dist/120)})`;
-                            ctx.stroke();
-                        }
-                    }
-                }
-            }
+const COLORS = ['#2a955a','#a8d8bc','#7ec8e3','#c8c87e','#e8b87e','#9b94d4','#e07a9b'];
+const balls = [];
+const MAX_BALLS = 14;
 
-            // Анимационный цикл
-            function animate() {
-                updateParticles();
-                draw();
-                requestAnimationFrame(animate);
-            }
+let mouseX = -200, mouseY = -200;
 
-            // Инициализация и старт
-            initParticles();
-            animate();
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
 
-            // При изменении размера пересоздаём частицы с учётом новых размеров
-            window.addEventListener('resize', function() {
-                particles = [];
-                initParticles();
-            });
+  if (balls.length < MAX_BALLS && Math.random() > 0.6) {
+    balls.push({
+      x: mouseX,
+      y: mouseY,
+      vx: (Math.random() - 0.5) * 2,
+      vy: (Math.random() - 0.5) * 2,
+      r: 8 + Math.random() * 18,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      alpha: 0.7,
+      life: 1.0
+    });
+  }
+});
 
-        })();
-    </script>
+function animBalls() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = balls.length - 1; i >= 0; i--) {
+    const b = balls[i];
+    b.x += b.vx;
+    b.y += b.vy;
+    b.vy += 0.04;
+    b.life -= 0.015;
+    b.alpha = b.life * 0.7;
+
+    if (b.life <= 0) { balls.splice(i, 1); continue; }
+
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+    ctx.fillStyle = b.color;
+    ctx.globalAlpha = b.alpha;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+  requestAnimationFrame(animBalls);
+}
+animBalls();
+
+// MOBILE HAMBURGER
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
+hamburger.addEventListener('click', () => {
+  navLinks.classList.toggle('open');
+});
+
+// Close on nav click
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => navLinks.classList.remove('open'));
+});
+</script>
 </body>
 </html>
